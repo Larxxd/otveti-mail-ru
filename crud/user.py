@@ -25,7 +25,6 @@ async def update_user(db: AsyncSession, user_id: int, user_update: UserUpdate) -
         return None
     for field, value in user_update.model_dump(exclude_unset=True).items():
         setattr(db_user, field, value)
-    db_user.password = HashPassword().hash_password(db_user.password)
     
     await db.commit()
     await db.refresh(db_user)

@@ -8,6 +8,7 @@ from jose import jwt
 from config import ALGORITHM, SECRET_KEY
 from schemas.token import TokenResponse
 from .hash_passwords import HashPassword
+from datetime import datetime, timedelta
 
 class UserService():
     def __init__(self, db: AsyncSession ):
@@ -20,7 +21,9 @@ class UserService():
             raise HTTPException(409, "User already exists!")
         
         created_user =  await create_user(self.db, user_reg)
-        dataload = {"user_id": created_user.id}
+
+        expiration = datetime.now() + timedelta(minutes = 15)
+        dataload = {"user_id": created_user.id, "exp": expiration}
         token = jwt.encode(dataload, SECRET_KEY,ALGORITHM)
 
         return TokenResponse(access_token=token,token_type="Bearer",user=UserRead.model_validate(created_user))
@@ -39,13 +42,32 @@ class UserService():
         result_user = finded_user.scalar_one_or_none()
         if not result_user:
             raise HTTPException(404, "User is not exists!")
-        if not HashPassword().check_password(user.password,UserCreate.model_validate(finded_user).password):
+        if not HashPassword().check_password(user.password,result_user.password):
             raise HTTPException(401, "Incorrect login or password")
         dataload = {"user_id": result_user.id}
         token = jwt.encode(dataload,SECRET_KEY, ALGORITHM)
         
         
-    
+    async def login(self, user: UserCreate ) -> TokenResponse:
+        if user == None:
+            raise HTTPException(400, "User is empty!")
+        finded_user = await self.db.execute(select(User).where(User.name == user.name))
+        result_user = finded_user.scalar_one_or_none()
+        if result_user == None:
+            raise HTTPException(404, "User not exists!")
+        if not HashPassword().check_password(user.password, result_user.password):
+            raise HTTPException(401, "Incorrect login or password!")
+        
+        expiration = datetime.now() + timedelta(minutes = 15)
+        dataload = {"user_id": result_user.id, "exp": expiration}
+        token = jwt.encode(dataload,SECRET_KEY,ALGORITHM)
+        return TokenResponse(access_token=token, token_type="Bearer", user=UserRead.model_validate(user))
+
+    async def get_me(self, token: str ):
+        decoded_token = jwt.decode(token, SECRET_KEY,ALGORITHM)
+        # Что дальше???
+
+
     # Че блять не помню такого
     def get_current_user(self):
         pass
