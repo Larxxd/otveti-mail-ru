@@ -9,9 +9,6 @@ if TYPE_CHECKING:
     from models.user import User
 
 class Answer(Base):
-    __tablename__ = "answers"
-
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, nullable=False)
     answer_text: Mapped[str] = mapped_column(Text, nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False)
     question_id: Mapped[int] = mapped_column(ForeignKey("questions.id", ondelete="CASCADE"), index=True, nullable=False)

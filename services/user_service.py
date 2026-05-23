@@ -28,26 +28,7 @@ class UserService():
 
         return TokenResponse(access_token=token,token_type="Bearer",user=UserRead.model_validate(created_user))
         
-
-    # Проверка наличия юзера в дб. Если он есть, то проверить пароль. Если всё норм то войти
-    # Если пароль неправильынй сообщить об ошибке. Если пользователя такого нет
-    # то тоже сообщи лол
-    async def check_authorization(self, user: UserCreate, token: str = "") -> User | None:
-        
-        if token != "":
-            token_decode = jwt.decode(token, SECRET_KEY,ALGORITHM)
-            return await read_user(self.db,token_decode["user_id"])
-        
-        finded_user = await self.db.execute(select(User).where(User.name == user.name))        
-        result_user = finded_user.scalar_one_or_none()
-        if not result_user:
-            raise HTTPException(404, "User is not exists!")
-        if not HashPassword().check_password(user.password,result_user.password):
-            raise HTTPException(401, "Incorrect login or password")
-        dataload = {"user_id": result_user.id}
-        token = jwt.encode(dataload,SECRET_KEY, ALGORITHM)
-        
-        
+    # Логин без токена
     async def login(self, user: UserCreate ) -> TokenResponse:
         if user == None:
             raise HTTPException(400, "User is empty!")
@@ -61,16 +42,19 @@ class UserService():
         expiration = datetime.now() + timedelta(minutes = 15)
         dataload = {"user_id": result_user.id, "exp": expiration}
         token = jwt.encode(dataload,SECRET_KEY,ALGORITHM)
-        return TokenResponse(access_token=token, token_type="Bearer", user=UserRead.model_validate(user))
+        return TokenResponse(access_token=token, token_type="Bearer", user=UserRead.model_validate(result_user))
 
-    async def get_me(self, token: str ):
-        decoded_token = jwt.decode(token, SECRET_KEY,ALGORITHM)
-        # Что дальше???
-
+    # Если есть токен
+    async def get_me(self, token: str ) -> UserRead | None:
+       
+        decoded_token = jwt.decode(token,SECRET_KEY,ALGORITHM)
+        user = await read_user(self.db, decoded_token["user_id"])
+        
+        if user:
+            return UserRead.model_validate(user)
+        raise HTTPException(400, "User is empty!")
 
     # Че блять не помню такого
-    def get_current_user(self):
-        pass
 
     def create_question(self):
         pass

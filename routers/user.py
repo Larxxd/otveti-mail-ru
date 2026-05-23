@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Header
 from schemas.user import UserCreate, UserRead, UserUpdate
 from schemas.token import TokenResponse
 from crud.user import read_user, update_user
@@ -14,6 +14,12 @@ router = APIRouter(
 @router.post('/registration', response_model=TokenResponse)
 async def registr_user(user: UserCreate, db: AsyncSession=Depends(get_db)):
     return await UserService(db).registration(user)
+
+@router.get("/me", response_model = UserRead)
+async def get_me(authorization: str = Header(...), db: AsyncSession=Depends(get_db)):
+    token = authorization.split()[1]
+    return await UserService(db).get_me(token)
+
 
 @router.get('/{user_id}', response_model=UserRead)
 async def get_user (user_id: int, db: AsyncSession=Depends(get_db)):
