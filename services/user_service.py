@@ -1,12 +1,12 @@
 from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from schemas.user import UserCreate, UserRead
-from models.user import User
-from crud.user import create_user, read_user
+from ..schemas.user import UserCreate, UserRead
+from ..models.user import User
+from ..crud.user import create_user, read_user
 from jose import jwt
-from config import ALGORITHM, SECRET_KEY
-from schemas.token import TokenResponse
+from ..config import ALGORITHM, SECRET_KEY
+from ..schemas.token import TokenResponse
 from .hash_passwords import HashPassword
 from datetime import datetime, timedelta
 

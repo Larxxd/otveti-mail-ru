@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
-from models import Question
-from schemas import QuestionCreate
+from ..models import Question
+from ..schemas import QuestionCreate
 from typing import Sequence
 
 

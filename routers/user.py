@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends, Header
-from schemas.user import UserCreate, UserRead, UserUpdate
-from schemas.token import TokenResponse
-from crud.user import read_user, update_user
+from ..schemas.user import UserCreate, UserRead, UserUpdate
+from ..schemas.token import TokenResponse
+from ..crud.user import read_user, update_user
 from sqlalchemy.ext.asyncio import AsyncSession
-from dependencies import get_db
-from services.user_service import UserService
+from ..dependencies import get_db
+from ..services.user_service import UserService
 
 router = APIRouter(
     prefix = "/user",

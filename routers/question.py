@@ -1,10 +1,10 @@
-from dependencies import get_db
+from ..dependencies import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from schemas.question import QuestionCreate, QuestionRead
-from schemas.answer import AnswerCreate, AnswerRead
-from crud.question import create_question, read_questions, read_question
-from crud.answer import create_answer
+from ..schemas.question import QuestionCreate, QuestionRead
+from ..schemas.answer import AnswerCreate, AnswerRead
+from ..crud.question import create_question, read_questions, read_question
+from ..crud.answer import create_answer
 from typing import Sequence
 
 router = APIRouter(

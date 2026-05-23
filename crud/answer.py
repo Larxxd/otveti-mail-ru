@@ -1,5 +1,5 @@
-from schemas import AnswerCreate
-from models import Answer
+from ..schemas import AnswerCreate
+from ..models import Answer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import Sequence

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Text, ForeignKey, DateTime, func
-from database import Base
+from ..database import Base
 from datetime import datetime
 from typing import TYPE_CHECKING
 
