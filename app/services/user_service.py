@@ -5,7 +5,7 @@ from ..schemas.user import UserCreate, UserRead
 from ..models.user import User
 from ..crud.user import create_user, read_user
 from jose import jwt
-from ..config import ALGORITHM, SECRET_KEY
+from ..settings import settings
 from ..schemas.token import TokenResponse
 from .hash_passwords import HashPassword
 from datetime import datetime, timedelta
@@ -24,7 +24,7 @@ class UserService():
 
         expiration = datetime.now() + timedelta(minutes = 15)
         dataload = {"user_id": created_user.id, "exp": expiration}
-        token = jwt.encode(dataload, SECRET_KEY,ALGORITHM)
+        token = jwt.encode(dataload, settings.secret_key,settings.algorithm)
 
         return TokenResponse(access_token=token,token_type="Bearer",user=UserRead.model_validate(created_user))
         
@@ -41,13 +41,13 @@ class UserService():
         
         expiration = datetime.now() + timedelta(minutes = 15)
         dataload = {"user_id": result_user.id, "exp": expiration}
-        token = jwt.encode(dataload,SECRET_KEY,ALGORITHM)
+        token = jwt.encode(dataload,settings.secret_key,settings.algorithm)
         return TokenResponse(access_token=token, token_type="Bearer", user=UserRead.model_validate(result_user))
 
     # Если есть токен
     async def get_me(self, token: str ) -> UserRead | None:
        
-        decoded_token = jwt.decode(token,SECRET_KEY,ALGORITHM)
+        decoded_token = jwt.decode(token,settings.secret_key,settings.algorithm)
         user = await read_user(self.db, decoded_token["user_id"])
         
         if user:

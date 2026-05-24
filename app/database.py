@@ -1,13 +1,9 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 from sqlalchemy.orm import  DeclarativeBase, declared_attr, Mapped, mapped_column
+from .settings import settings
 
-DB_USER = "postgres"
-DB_PASSWORD = "ari1234567"
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "larenak"
 
-DATABASE_URL = f"postgresql+asyncpg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+DATABASE_URL = f"postgresql+asyncpg://{settings.db_user}:{settings.db_password}@{settings.db_host}:{settings.db_port}/{settings.db_name}"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 AsyncSessionLocal = async_sessionmaker(bind=engine, expire_on_commit=True)
