@@ -11,5 +11,5 @@ class Settings(BaseSettings):
     algorithm: str
 
     model_config = SettingsConfigDict(env_file=Path(__file__).parent.parent / ".env")
-print(Path(__file__).parent / ".env")
+    
 settings = Settings(**{})

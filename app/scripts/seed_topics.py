@@ -1,6 +1,6 @@
 import asyncio
-from database import AsyncSessionLocal, engine, Base
-from models.topic import Topic
+from ..database import AsyncSessionLocal, engine, Base
+from ..models.topic import Topic
 
 TOPICS = ["Политика", "Наука", "Спорт", "Технологии"]
 
