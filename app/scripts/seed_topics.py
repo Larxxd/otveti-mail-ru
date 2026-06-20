@@ -6,9 +6,6 @@ TOPICS = ["Политика", "Наука", "Спорт", "Технологии"
 
 
 async def seed():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    
     async with AsyncSessionLocal() as db:
         for name in TOPICS:
             db.add(Topic(name=name))

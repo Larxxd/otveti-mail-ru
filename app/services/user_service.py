@@ -45,10 +45,9 @@ class UserService():
         return TokenResponse(access_token=token, token_type="Bearer", user=UserRead.model_validate(result_user))
 
     # Если есть токен
-    async def get_me(self, token: str ) -> UserRead | None:
+    async def get_me(self, user_id: int ) -> UserRead | None:
        
-        decoded_token = jwt.decode(token,settings.secret_key,settings.algorithm)
-        user = await read_user(self.db, decoded_token["user_id"])
+        user = await read_user(self.db, user_id)
         
         if user:
             return UserRead.model_validate(user)
