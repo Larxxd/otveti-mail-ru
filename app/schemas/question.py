@@ -4,7 +4,6 @@ from .answer import AnswerRead
 from datetime import datetime
 class QuestionCreate(BaseModel):
     topic_id: int
-    user_id: int
     question_text: str
     question_header: str
 

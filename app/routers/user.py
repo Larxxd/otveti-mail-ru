@@ -19,6 +19,9 @@ async def registr_user(user: UserCreate, db: AsyncSession=Depends(get_db)):
 async def get_me(user_id: int = Depends(get_current_user), db: AsyncSession=Depends(get_db)):
     return await UserService(db).get_me(user_id)
 
+@router.post("/login",response_model=TokenResponse)
+async def login_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
+    return await UserService(db).login(user)
 
 @router.get('/{user_id}', response_model=UserRead)
 async def get_user (user_id: int, db: AsyncSession=Depends(get_db)):

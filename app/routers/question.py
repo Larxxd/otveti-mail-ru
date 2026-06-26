@@ -1,4 +1,4 @@
-from ..dependencies import get_db
+from ..dependencies import get_db, get_current_user
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..schemas.question import QuestionCreate, QuestionRead
@@ -13,8 +13,8 @@ router = APIRouter(
 )
 
 @router.post("/create", response_model=QuestionRead)
-async def make_question(question: QuestionCreate, db: AsyncSession = Depends(get_db)):
-    return await create_question(db, question)
+async def make_question( question: QuestionCreate,user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    return await create_question(db,user_id, question)
 
 @router.get("/{question_id}", response_model=QuestionRead)
 async def get_question(question_id: int, db: AsyncSession = Depends(get_db)):

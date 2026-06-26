@@ -6,8 +6,9 @@ from ..schemas import QuestionCreate
 from typing import Sequence
 
 
-async def create_question(db: AsyncSession, question: QuestionCreate) -> Question:
+async def create_question(db: AsyncSession, user_id: int, question: QuestionCreate) -> Question:
     db_question = Question(**question.model_dump())
+    db_question.user_id = user_id
     db.add(db_question)
     await db.commit()
     await db.refresh(db_question)
