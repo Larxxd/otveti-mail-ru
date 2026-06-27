@@ -13,7 +13,7 @@ router = APIRouter(
 )
 
 @router.post("/create", response_model=QuestionRead)
-async def make_question( question: QuestionCreate,user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+async def make_question(question: QuestionCreate,user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     return await create_question(db,user_id, question)
 
 @router.get("/{question_id}", response_model=QuestionRead)
@@ -24,8 +24,8 @@ async def get_question(question_id: int, db: AsyncSession = Depends(get_db)):
     return question
 
 @router.post("/{question_id}", response_model=AnswerRead)
-async def make_answer(question_id: int, answer_create: AnswerCreate, db: AsyncSession = Depends(get_db)):
-    return await create_answer(db,answer_create, question_id)
+async def make_answer(question_id: int, answer_create: AnswerCreate, user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    return await create_answer(db,answer_create, question_id, user_id)
 
 @router.get("/", response_model=Sequence[QuestionRead])
 async def get_questions(db: AsyncSession = Depends(get_db)):

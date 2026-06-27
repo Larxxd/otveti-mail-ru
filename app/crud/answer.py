@@ -4,9 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import Sequence
 
-async def create_answer(db: AsyncSession, answer: AnswerCreate, question_id: int) -> Answer:
+async def create_answer(db: AsyncSession, answer: AnswerCreate, question_id: int, user_id: int) -> Answer:
     db_answer = Answer(**answer.model_dump())
     db_answer.question_id = question_id
+    db_answer.user_id = user_id
     db.add(db_answer)
     await db.commit()
     await db.refresh(db_answer)

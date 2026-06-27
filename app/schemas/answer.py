@@ -2,7 +2,6 @@ from pydantic import BaseModel, ConfigDict
 from datetime import datetime
 
 class AnswerCreate(BaseModel):
-    user_id: int
     answer_text: str
 
 class AnswerRead(BaseModel):
