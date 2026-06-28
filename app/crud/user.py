@@ -23,7 +23,14 @@ async def update_user(db: AsyncSession, user_id: int, user_update: UserUpdate) -
     db_user: User | None = await read_user(db, user_id)
     if db_user == None:
         return None
+    
+    db_user_with_same_name = await db.execute(select(User).where(User.name == user_update.name))
+    result_db_user_with_same_name = db_user_with_same_name.scalar_one_or_none()
+    if result_db_user_with_same_name != None:
+        return db_user
+    
     for field, value in user_update.model_dump(exclude_unset=True).items():
+        if not value: continue
         setattr(db_user, field, value)
     
     await db.commit()

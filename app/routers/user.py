@@ -19,20 +19,15 @@ async def registr_user(user: UserCreate, db: AsyncSession=Depends(get_db)):
 async def get_me(user_id: int = Depends(get_current_user), db: AsyncSession=Depends(get_db)):
     return await UserService(db).get_me(user_id)
 
+
+@router.patch('/me', response_model=UserRead)
+async def edit_user(user_update: UserUpdate, user_id: int = Depends(get_current_user), db: AsyncSession=Depends(get_db)):
+    return await UserService(db).patch_user(user_update, user_id)
+
 @router.post("/login",response_model=TokenResponse)
 async def login_user(user: UserCreate, db: AsyncSession = Depends(get_db)):
     return await UserService(db).login(user)
 
 @router.get('/{user_id}', response_model=UserRead)
 async def get_user (user_id: int, db: AsyncSession=Depends(get_db)):
-    user = await read_user(db,user_id)
-    if user is None:
-        raise HTTPException(404, "User not found!!!")
-    return user
-
-@router.patch('/{user_id}', response_model=UserRead)
-async def edit_user(user_update: UserUpdate, user_id: int, db: AsyncSession=Depends(get_db)):
-    user = await update_user(db, user_id, user_update)
-    if user is None:
-        raise HTTPException(404, "User not found!!!")
-    return user
+    return await UserService(db).get_user(user_id)
