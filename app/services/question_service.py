@@ -1,12 +1,13 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas.question import QuestionCreate, QuestionRead
+from ..schemas.question import QuestionCreate
 from ..schemas.answer import AnswerCreate
 from ..models.question import Question
 from ..models.answer import Answer
 from typing import Sequence
 from ..crud.question import read_question, read_questions, create_question
 from ..crud.answer import create_answer 
+
 class QuestionService:
     def __init__(self, db: AsyncSession):
         self.db = db
@@ -25,3 +26,15 @@ class QuestionService:
     
     async def create_answer(self, question_id: int, answer_create: AnswerCreate, user_id: int) -> Answer:
         return await create_answer(self.db, answer_create,question_id,user_id)
+    
+    async def delete_question(self):
+        pass
+
+    async def edit_question(self):
+        pass
+
+    async def edit_answer(self):
+        pass
+
+    async def delete_answer(self):
+        pass

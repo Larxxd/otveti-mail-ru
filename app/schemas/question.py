@@ -1,11 +1,14 @@
 from pydantic import BaseModel, ConfigDict, Field
-from typing import List
+from typing import List, Union
 from .answer import AnswerRead
 from datetime import datetime
+
+
 class QuestionCreate(BaseModel):
     topic_id: int
     question_text: str
     question_header: str
+
 
 class QuestionRead(BaseModel):
     id: int
@@ -18,3 +21,7 @@ class QuestionRead(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
+class QuestionUpdate(BaseModel):
+    question_text: Union[str, None] = None
+    question_header: Union[str, None] = None
