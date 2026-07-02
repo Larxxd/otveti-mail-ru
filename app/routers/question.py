@@ -7,21 +7,25 @@ from typing import Sequence
 from ..services.question_service import QuestionService
 
 router = APIRouter(
-    prefix = "/questions",
+    prefix="/questions",
     tags=["questions"]
 )
 
+
 @router.post("/create", response_model=QuestionRead)
-async def make_question(question: QuestionCreate,user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+async def make_question(question: QuestionCreate, user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     return await QuestionService(db).create_question(question, user_id)
+
 
 @router.get("/{question_id}", response_model=QuestionRead)
 async def get_question(question_id: int, db: AsyncSession = Depends(get_db)):
     return await QuestionService(db).read_question(question_id)
 
+
 @router.post("/{question_id}", response_model=AnswerRead)
 async def make_answer(question_id: int, answer_create: AnswerCreate, user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    return await QuestionService(db).create_answer(question_id,answer_create,user_id)
+    return await QuestionService(db).create_answer(question_id, answer_create, user_id)
+
 
 @router.get("/", response_model=Sequence[QuestionRead])
 async def get_questions(db: AsyncSession = Depends(get_db)):

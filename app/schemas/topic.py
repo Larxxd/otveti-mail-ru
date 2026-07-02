@@ -1,7 +1,9 @@
 from pydantic import BaseModel, ConfigDict
 
+
 class TopicCreate(BaseModel):
     name: str
+
 
 class TopicRead(BaseModel):
     id: int

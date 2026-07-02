@@ -10,7 +10,7 @@ async def seed():
         for name in TOPICS:
             db.add(Topic(name=name))
         await db.commit()
-        
+
         print("Топики добавлены")
 
 asyncio.run(seed())

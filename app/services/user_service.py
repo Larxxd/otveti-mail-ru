@@ -63,9 +63,3 @@ class UserService():
             raise HTTPException(404, "User not found!!!")
         return user
     
-    # Че блять не помню такого
-    def create_question(self):
-        pass
-
-    def create_answer(self):
-        pass
