@@ -33,8 +33,6 @@ async def update_user(db: AsyncSession, user_id: int, user_update: UserUpdate) -
         return db_user
 
     for field, value in user_update.model_dump(exclude_unset=True).items():
-        if not value:
-            continue
         setattr(db_user, field, value)
 
     await db.commit()

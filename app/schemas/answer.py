@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 from typing import Union
 
@@ -18,4 +18,4 @@ class AnswerRead(BaseModel):
 
 
 class AnswerUpdate(BaseModel):
-    answer_text: Union[str, None] = None
+    answer_text: Union[str, None] = Field(default=None, min_length=1)

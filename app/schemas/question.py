@@ -23,5 +23,5 @@ class QuestionRead(BaseModel):
 
 
 class QuestionUpdate(BaseModel):
-    question_text: Union[str, None] = None
-    question_header: Union[str, None] = None
+    question_text: Union[str, None] = Field(default=None, min_length=1)
+    question_header: Union[str, None] = Field(default=None, min_length=1)

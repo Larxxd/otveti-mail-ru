@@ -32,7 +32,7 @@ async def update_answer(db: AsyncSession, answer: AnswerUpdate, user_id: int, an
         return db_answer
 
     for field, value in answer.model_dump(exclude_unset=True).items():
-        if not value:
+        if value is None:
             continue
         setattr(db_answer, field, value)
 

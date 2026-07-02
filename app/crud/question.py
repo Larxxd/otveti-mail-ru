@@ -41,7 +41,7 @@ async def update_question(db: AsyncSession, question: QuestionUpdate, user_id: i
         return db_question
 
     for field, value in question.model_dump(exclude_unset=True).items():
-        if not value:
+        if value is None:
             continue
         setattr(db_question, field, value)
 
