@@ -2,7 +2,7 @@ from ..dependencies import get_db, get_current_user
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from ..schemas.question import QuestionCreate, QuestionRead, QuestionUpdate
-from ..schemas.answer import AnswerCreate, AnswerRead, AnswerUpdate
+from ..schemas.answer import AnswerCreate, AnswerRead
 from typing import Sequence
 from ..services.question_service import QuestionService
 
@@ -30,11 +30,6 @@ async def update_question(question_id: int, question: QuestionUpdate, user_id: i
 @router.post("/{question_id}", response_model=AnswerRead)
 async def make_answer(question_id: int, answer_create: AnswerCreate, user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     return await QuestionService(db).create_answer(question_id, answer_create, user_id)
-
-
-@router.patch("/{question_id}/answers/{answer_id}", response_model=AnswerRead)
-async def update_answer(question_id: int, answer_id: int, answer: AnswerUpdate, user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
-    return await QuestionService(db).edit_answer(answer_id, answer, user_id)
 
 
 @router.get("/", response_model=Sequence[QuestionRead])

@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas.question import QuestionCreate, QuestionUpdate
-from ..schemas.answer import AnswerCreate, AnswerUpdate
+from ..schemas.question import QuestionCreate, QuestionUpdate, QuestionRead
+from ..schemas.answer import AnswerCreate, AnswerUpdate, AnswerRead
 from ..models.question import Question
 from ..models.answer import Answer
 from typing import Sequence
@@ -32,10 +32,16 @@ class QuestionService:
         pass
 
     async def edit_question(self, question: QuestionUpdate, user_id: int, question_id: int):
-        return await update_question(self.db, question, user_id, question_id)
+        edited_question = await update_question(self.db, question, user_id, question_id)
+        if QuestionRead.model_validate(edited_question).user_id != user_id:
+            raise HTTPException(403, "Access is denied!")
+        return edited_question
 
     async def edit_answer(self, answer_id: int, answer: AnswerUpdate, user_id: int):
-        return await update_answer(self.db, answer, user_id, answer_id)
+        edited_answer = await update_answer(self.db, answer, user_id, answer_id)
+        if AnswerRead.model_validate(edited_answer).user_id != user_id:
+            raise HTTPException(403, "Access is denied!")
+        return edited_answer
 
     async def delete_answer(self):
         pass

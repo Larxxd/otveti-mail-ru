@@ -4,6 +4,7 @@ from sqlalchemy.orm import selectinload
 from ..models import Question
 from ..schemas import QuestionCreate, QuestionUpdate, QuestionRead
 from typing import Sequence
+from datetime import datetime
 
 
 async def create_question(db: AsyncSession, user_id: int, question: QuestionCreate) -> Question:
@@ -44,6 +45,7 @@ async def update_question(db: AsyncSession, question: QuestionUpdate, user_id: i
         if value is None:
             continue
         setattr(db_question, field, value)
+    setattr(db_question, "updated_at", datetime.now())
 
     await db.commit()
     await db.refresh(db_question)

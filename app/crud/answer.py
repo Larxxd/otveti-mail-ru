@@ -3,6 +3,7 @@ from ..models import Answer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import Sequence
+from datetime import datetime
 
 
 async def create_answer(db: AsyncSession, answer: AnswerCreate, question_id: int, user_id: int) -> Answer:
@@ -35,6 +36,7 @@ async def update_answer(db: AsyncSession, answer: AnswerUpdate, user_id: int, an
         if value is None:
             continue
         setattr(db_answer, field, value)
+    setattr(db_answer, "updated_at", datetime.now())
 
     await db.commit()
     await db.refresh(db_answer)
