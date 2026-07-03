@@ -27,6 +27,11 @@ async def update_question(question_id: int, question: QuestionUpdate, user_id: i
     return await QuestionService(db).edit_question(question, user_id, question_id)
 
 
+@router.delete("/{question_id}", response_model=QuestionRead)
+async def delete_question(question_id: int, user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    return await QuestionService(db).del_question(question_id, user_id)
+
+
 @router.post("/{question_id}", response_model=AnswerRead)
 async def make_answer(question_id: int, answer_create: AnswerCreate, user_id: int = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
     return await QuestionService(db).create_answer(question_id, answer_create, user_id)

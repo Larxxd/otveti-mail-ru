@@ -50,3 +50,11 @@ async def update_question(db: AsyncSession, question: QuestionUpdate, user_id: i
     await db.commit()
     await db.refresh(db_question)
     return db_question
+
+
+async def delete_question(db: AsyncSession, question_id: int):
+    db_question = await read_question(db, question_id)
+    if db_question:
+        await db.delete(db_question)
+        await db.commit()
+    return db_question

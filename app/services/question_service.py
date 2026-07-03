@@ -5,8 +5,8 @@ from ..schemas.answer import AnswerCreate, AnswerUpdate, AnswerRead
 from ..models.question import Question
 from ..models.answer import Answer
 from typing import Sequence
-from ..crud.question import read_question, read_questions, create_question, update_question
-from ..crud.answer import create_answer, update_answer
+from ..crud.question import read_question, read_questions, create_question, update_question, delete_question
+from ..crud.answer import create_answer, update_answer, delete_answer, read_answer
 
 
 class QuestionService:
@@ -28,8 +28,11 @@ class QuestionService:
     async def create_answer(self, question_id: int, answer_create: AnswerCreate, user_id: int) -> Answer:
         return await create_answer(self.db, answer_create, question_id, user_id)
 
-    async def delete_question(self):
-        pass
+    async def del_question(self, question_id: int, user_id: int):
+        deleted_question = await read_question(self.db, question_id)
+        if QuestionRead.model_validate(deleted_question).user_id != user_id:
+            raise HTTPException(403, "Access is denied")
+        return await delete_question(self.db, question_id)
 
     async def edit_question(self, question: QuestionUpdate, user_id: int, question_id: int):
         edited_question = await update_question(self.db, question, user_id, question_id)
@@ -43,5 +46,8 @@ class QuestionService:
             raise HTTPException(403, "Access is denied!")
         return edited_answer
 
-    async def delete_answer(self):
-        pass
+    async def del_answer(self, answer_id: int, user_id: int):
+        deleted_answer = await read_answer(self.db, answer_id)
+        if AnswerRead.model_validate(deleted_answer).user_id != user_id:
+            raise HTTPException(403, "Access is denied")
+        return await delete_answer(self.db, answer_id)

@@ -22,13 +22,16 @@ async def read_answers(db: AsyncSession, question_id: int, skip: int = 0, limit:
     return result.scalars().all()
 
 
+async def read_answer(db: AsyncSession, answer_id: int):
+    db_answer = await db.execute(select(Answer).where(Answer.id == answer_id))
+    return db_answer.scalar_one_or_none()
+
+
 async def update_answer(db: AsyncSession, answer: AnswerUpdate, user_id: int, answer_id: int) -> Answer | None:
     if answer == None:
         return None
 
-    db_answer = await db.execute(select(Answer).where(Answer.id == answer_id))
-    db_answer = db_answer.scalar_one_or_none()
-
+    db_answer = await read_answer(db, answer_id)
     if AnswerRead.model_validate(db_answer).user_id != user_id:
         return db_answer
 
@@ -40,4 +43,12 @@ async def update_answer(db: AsyncSession, answer: AnswerUpdate, user_id: int, an
 
     await db.commit()
     await db.refresh(db_answer)
+    return db_answer
+
+
+async def delete_answer(db: AsyncSession, answer_id: int):
+    db_answer = await read_answer(db, answer_id)
+    if db_answer:
+        await db.delete(db_answer)
+        await db.commit()
     return db_answer
